@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:math_expressions/math_expressions.dart';
 class Calculator extends StatefulWidget {
   const Calculator({Key key}) : super(key: key);
 
@@ -14,6 +15,11 @@ class _CalculatorState extends State<Calculator> {
   String expression = "";
   double mathEquationFontSize = 40.0;
   double mathAnswerFontSize = 50.0;
+  Color answerColor = Colors.black;
+
+  // GlobalKey is needed to show bottom sheet.
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   //Function for creating the calculator buttons.
   Container myButton(String btnText, Color btnColor) {
     return Container(
@@ -47,11 +53,106 @@ class _CalculatorState extends State<Calculator> {
     );
   }
   _onClick(String btnText) {
-    print(btnText);
+    setState(() {
+      if (btnText == "Hist.") {
+        // this
+        //     ._scaffoldKey
+        //     .currentState
+        //     .showBottomSheet((ctx) => showBottomSheet(ctx));
+        showBottomSheet();
+        //print(mathEquation.substring(mathEquation.length - 1));
+      }
+      else if (btnText == "C") {
+        mathEquationFontSize = 40;
+        mathAnswerFontSize = 50;
+        mathEquation = "0";
+        mathAnswer = "0";
+        answerColor = Colors.black;
+      }
+      else if (btnText == "⌫") {
+        mathEquationFontSize = 50;
+        mathAnswerFontSize = 40;
+        mathEquation = mathEquation.substring(0, mathEquation.length - 1);
+        if(mathEquation == "") {
+          mathEquation = "0";
+        }
+      }
+      else if (btnText == "=") {
+        mathEquationFontSize = 38.0;
+        mathAnswerFontSize = 48.0;
+
+        expression = mathEquation;
+        expression = expression.replaceAll('×', '*');
+        expression = expression.replaceAll('÷', '/');
+
+        try{
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+
+          ContextModel cm = ContextModel();
+          mathAnswer = '${exp.evaluate(EvaluationType.REAL, cm)}';
+          answerColor = Colors.black;
+        }catch(e){
+          mathAnswer = "Error";
+          answerColor = Colors.red;
+        }
+      }
+      else if (((btnText == ("+")) || (btnText == ("-")) || (btnText == ("×")) || (btnText == ("÷"))) && ( (mathEquation.substring(mathEquation.length - 1) == "+") || (mathEquation.substring(mathEquation.length - 1) == "-") || (mathEquation.substring(mathEquation.length - 1) == "×") || (mathEquation.substring(mathEquation.length - 1) == "÷"))) {
+
+      }
+      else {
+        mathEquationFontSize = 50.0;
+        mathAnswerFontSize = 40.0;
+        if (mathEquation == "0") {
+          mathEquation = btnText;
+        } else {
+          mathEquation = mathEquation + btnText;
+        }
+        answerColor = Colors.black;
+        mathAnswer = "0";
+      }
+    });
   }
+void showBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Container(
+              height: MediaQuery.of(context).size.height * 1,
+              width: MediaQuery.of(context).size.width * 1,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue, width: 2.0),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "History",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  Divider(
+                    height: 20,
+                    thickness: 2,
+                    color: Colors.blue,
+                  ),
+                ],
+              )
+          );
+        },
+    );
+}
+  // Widget buildBottomSheet(BuildContext context) {
+  //
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: this._scaffoldKey,
       appBar: AppBar(
         title: Text("Simple Calculator"),
         centerTitle: true,
@@ -76,7 +177,8 @@ class _CalculatorState extends State<Calculator> {
             child: Text(
                     mathAnswer,
                     style: TextStyle(
-                        fontSize: mathAnswerFontSize
+                        fontSize: mathAnswerFontSize,
+                        color: answerColor,
                     ),
                   ),
           ),
