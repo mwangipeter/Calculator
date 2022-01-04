@@ -118,7 +118,7 @@ void showBottomSheet() {
         context: context,
         builder: (builder) {
           return Container(
-              height: MediaQuery.of(context).size.height * 1,
+              height: MediaQuery.of(context).size.height * 2,
               width: MediaQuery.of(context).size.width * 1,
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
@@ -140,6 +140,70 @@ void showBottomSheet() {
                     thickness: 2,
                     color: Colors.blue,
                   ),
+                  // ignore: deprecated_member_use
+                  OutlineButton(
+                    onPressed: () => {},
+                    child: Text(
+                      "Clear",
+                      style: TextStyle(color: Color(0xffFF0000)),
+                    ),
+                    shape: StadiumBorder(),
+                    color: Color(0xffFF0000),
+                    borderSide: BorderSide(
+                      color: Color(0xffFF0000),
+                      //width: 2.5
+                    ),
+                  ),
+                  Container(
+                    child: Column(
+                      children: [
+                        Divider(
+                          height: 2,
+                          thickness: 2,
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.web_outlined),
+                          title: Text("Equation"),
+                          subtitle: Text("Answer"),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 2,
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.web_outlined),
+                          title: Text("Equation"),
+                          subtitle: Text("Answer"),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 2,
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.web_outlined),
+                          title: Text("Equation"),
+                          subtitle: Text("Answer"),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 2,
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.web_outlined),
+                          title: Text("Equation"),
+                          subtitle: Text("Answer"),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          thickness: 2,
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               )
           );
